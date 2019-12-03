@@ -31,7 +31,40 @@ server.post('/api/users', (req, res) => {
     }
 })
 
+// GET all users
 
+server.get('/api/users', (req, res) => {
+    db.find()
+        .then(users => {
+            res.status(200).json(users);
+        })
+        .catch(error => {
+            console.log('error on get for all users', error)
+            res.status(500).json({ error: 'The users information could not be retrieved' })
+        })
+})
+
+// GET user by id
+
+server.get('/api/users/:id', (req, res) => {
+
+    const id = req.body;
+
+    if (id === id) {
+        db.findById(id)
+            .then(users => {
+                res.status(200).json(users);
+            })
+            .catch(error => {
+                console.log('error on get user by id', error)
+                res.status(500).json({ error: 'The user information could not be retrieved' })
+            })
+    } else {
+        res.status(404).json({ errorMessage: 'Not Found' })
+    }
+})
+
+// DELETE user by id
 
 
 
@@ -39,4 +72,3 @@ const port = 3000;
 server.listen(port, () =>
     console.log(`\n ** API running on port ${port} **\n`)
 );
-
