@@ -48,8 +48,8 @@ server.get('/api/users', (req, res) => {
 
 server.get('/api/users/:id', (req, res) => {
 
-    const id = req.body;
-
+    const id = req.params.id;
+    console.log(id);
     if (id === id) {
         db.findById(id)
             .then(users => {
@@ -60,13 +60,30 @@ server.get('/api/users/:id', (req, res) => {
                 res.status(500).json({ error: 'The user information could not be retrieved' })
             })
     } else {
-        res.status(404).json({ errorMessage: 'Not Found' })
+        res.status(404).json({ errorMessage: 'The user with the specified ID does not exist' })
     }
 })
 
 // DELETE user by id
 
+server.delete('/api/users/:id', (req, res) => {
+    const id = req.params.id;
 
+    db.remove(id)
+        .then(removed => {
+            if (removed) {
+                res.status(200).json({ message: 'user removed successfully', removed });
+            } else {
+                res.status(404).json({ message: 'The user with the specified ID does not exist' })
+            }
+        })
+        .catch(error => {
+            console.log('error on DELETE /api/users/:id', error);
+            res.status(500).json({ errorMessage: 'The user could not be removed' })
+        })
+})
+
+// 
 
 const port = 3000;
 server.listen(port, () =>
